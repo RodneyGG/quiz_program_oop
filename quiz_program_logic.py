@@ -1,6 +1,13 @@
 import os 
 import json
 import random
+import time
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+
+
 
 #make a class for the users
 class Users:
@@ -131,10 +138,11 @@ class QuizGenerator(Filename):
 
 #make a class for asking question
 class QuizTaker(Filename):
-    def __init__(self, score=0, quiz_log=""):
+    def __init__(self, score=0, quiz_log="", total=0):
         super().__init__()
         self.score = score
         self.quiz_log = quiz_log
+        self.total = total
         
     def load_questions(self):
         questions = []
@@ -151,8 +159,8 @@ class QuizTaker(Filename):
         quiz_log = ""
         
         #load the questions
-        questions = self.load_questions()        
-        
+        questions = self.load_questions()  
+            
         #the program will randomize the order of the question
         random.shuffle(questions)
         
@@ -199,11 +207,67 @@ class QuizTaker(Filename):
         
         self.score = score
         self.quiz_log = quiz_log
-        return self.score, self.quiz_log
+        total = len(question) 
+        self.total = total
+        return self.score, self.quiz_log, self.total
     
-quiztaker = QuizTaker()
-quiztaker.select_file()
-quiztaker.ask_questions()
         
 #make a class for sending email
+class SendEmail(Users,Filename, QuizTaker):
+    def __init__(self):
+        super().__init__()
+        
+    def send_result(self):
+        topic = self.filename.replace("_questions.txt", "")
+        sender_email = "quizmakeroop@gmail.com"
+        app_password = "toae vefn frlq balq"
+        date = time.strftime("%Y-%m-%d %H:%M:%S")
+        
+        msg = MIMEMultipart()
+        msg["From"] = sender_email
+        msg["To"] = self.email
+        msg["Subject"] = f"Quiz Results for {self.username} - {topic.title()}"
+        
+        body = (
+            f"Hi {self.username},\n\n"
+            f"Here are your results for the topic: {topic.title()}\n"
+            f"Date: {date}\n"
+            f"Score: {self.score}/{self.total}\n\n"
+            f"--- Quiz Review ---\n\n{self.quiz_log}"
+        )
 
+        msg.attach(MIMEText(body, "plain"))
+        try:
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+                server.login(sender_email, app_password)
+                server.sendmail(sender_email, email, msg.as_string())
+            print("Email sent successfully!")
+        except Exception as error:
+            print(f"Failed to send email: {error}")
+            
+    def send_quiz(self):
+        topic = self.filename.replace("_questions.txt", "")
+        sender_email = "quizmakeroop@gmail.com"
+        app_password = "toae vefn frlq balq"
+        quiz = self.view_questions()
+        
+        msg = MIMEMultipart()
+        msg["From"] = sender_email
+        msg["To"] = self.email
+        msg["Subject"] = f"Question for Quiz - {topic.title()}"
+        
+        body = (
+            f"Hi {self.username},\n\n"
+            f"Here are the questions for the Quiz: {topic.title()}\n"
+            f"{quiz}\n"
+            
+        )
+
+        msg.attach(MIMEText(body, "plain"))
+        try:
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+                server.login(sender_email, app_password)
+                server.sendmail(sender_email, email, msg.as_string())
+            print("Email sent successfully!")
+        except Exception as error:
+            print(f"Failed to send email: {error}")
