@@ -174,7 +174,34 @@ class QuizGenerator(Filename):
             else:
                 print(f"This Question is already in the {self.filename}!\n") 
                 
-
+    def delete_question(self):
+        self.view_questions()
+        
+        question_to_delete = input("Enter the exact question text to delete: ").strip()
+        
+        with open(self.filepath, "r", encoding="utf-8") as file:
+            questions = []
+            for line in file:
+                line = line.strip()
+                if line:
+                    questions.append(json.loads(line))
+            
+            found = False
+            updated_questions = []
+            
+            for question in questions:
+                if question["question"] == question_to_delete:
+                    found = True
+                    continue
+                updated_questions.append(question)
+            
+            if not found:
+                print(f"The Question was not found in the {self.filename}")
+            #goodnight
+            with open(self.filepath, "w", encoding='utf-8') as file:
+                for questions in updated_questions:
+                    file.write(json.dumps(questions) + "\n")
+                    
 #make a class for asking question
 class QuizTaker(Filename):
     def __init__(self, score=0, quiz_log="", total=0):
