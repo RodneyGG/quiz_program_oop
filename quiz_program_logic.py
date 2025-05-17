@@ -38,6 +38,7 @@ class Filename:
                 #check if filename is already exists
                 while True:
                     try:
+                        filepath = self.folder + filename
                         open(filepath, "x").close()
                         break
                     except FileExistsError:
@@ -92,8 +93,43 @@ class Filename:
                 print(f"{topic}")
         print("-" * 30)
         
-filename = Filename()
-filename.select_file()
 #make a class for Questions generation
+class QuizGenerator(Filename):
+    def __init__(self):
+        super().__init__()
+
+    def question_saver(self):
+        #Ask the user to input a question
+        question = input("\nEnter your question: ").strip()
+        
+        #input choices for A, B, C, D
+        choice_1 = input("Enter choice 1: ").strip()
+        choice_2 = input("Enter choice 2: ").strip()
+        choice_3 = input("Enter choice 3: ").strip()
+        choice_4 = input("Enter choice 4: ").strip()
+        
+        #select what is the correct answer
+        correct_answer = ""
+        while correct_answer not in ['1', '2', '3', '4']:
+            correct_answer = input("Which is the correct answer? (1/2/3/4): \n").lower().strip()
+            questions_format = {
+                    "question": question,
+                    "choices": [choice_1, 
+                            choice_2, 
+                            choice_3, 
+                            choice_4],
+                    "answer": f"choice_{correct_answer}"
+                                    }
+        if self.filepath:
+            if not self.is_question_duplicate(self.filepath, question):
+                with open(self.filepath, "a", encoding="utf-8") as file:
+                    file.write(json.dumps(questions_format) + "\n")
+            else:
+                print(f"This Question is already in the {self.filename}!\n") 
+                
+quiz_generator = QuizGenerator()
+quiz_generator.select_file()
+quiz_generator.question_saver()
+            
 #make a class for sending email
 #make a class for asking question
