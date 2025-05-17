@@ -6,15 +6,51 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-
-
-
 #make a class for the users
 class Users:
     def __init__(self, username, password, email):
         self.username = username
         self.password = password
         self.email = email
+        
+        
+    #register the info to the text file
+    def register(self, filename='user/users.txt'):
+        user_info = {
+            "username": self.username,
+            "password": self.password,
+            "email": self.email 
+        }
+        
+        with open(filename, "r", encoding="utf-8") as file:
+            users_data = json.loads(file)
+        
+        for user in users_data:
+            if user["username"] == self.username:
+                print(f"{self.username} already exist. Please Try Again <3")
+                return False
+        #store the information here
+        with open(filename, "a") as file:
+            file.write(json.dumps(user_info) + "\n")
+
+    #validates the user        
+    @staticmethod
+    def log_in(username, password, filename='user/users.txt'):
+        with open(filename, "r", encoding="utf-8") as file:
+            user_info = json.loads(file)
+            
+        for user in user_info:
+            if user["username"] == username:
+                if user["password"] == password:
+                    print(f"Login successful! Welcome, {username}.")
+                    return True
+                else:
+                    print("Incorrect password.")
+                    return False
+            else:
+                print("Username not found.")
+                return False
+                
         
 #Make a class for picking of the file
 class Filename:
@@ -92,6 +128,7 @@ class Filename:
         except (FileNotFoundError, json.JSONDecodeError):
             return False
 
+    #list all the files that ends with _questions.txt
     def list_quiz_files(self):
         print("Available Quiz Files:")
         for file in os.listdir(self.folder):
@@ -105,6 +142,7 @@ class QuizGenerator(Filename):
     def __init__(self):
         super().__init__()
 
+    #append the question the text file
     def question_saver(self):
         self.view_questions(self.filepath)
         #Ask the user to input a question
@@ -129,6 +167,7 @@ class QuizGenerator(Filename):
                     "answer": f"choice_{correct_answer}"
                                     }
         if self.filepath:
+            #the question will append if there is already a question similar
             if not self.is_question_duplicate(self.filepath, question):
                 with open(self.filepath, "a", encoding="utf-8") as file:
                     file.write(json.dumps(questions_format) + "\n")
