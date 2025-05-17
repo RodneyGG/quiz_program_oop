@@ -1,5 +1,6 @@
 import os 
 import json
+import random
 
 #make a class for the users
 class Users:
@@ -10,10 +11,10 @@ class Users:
         
 #Make a class for picking of the file
 class Filename:
-    def __init__(self):
+    def __init__(self, filename="", filepath=""):
         self.folder = 'questions/'
-        self.filename = None
-        self.filepath = None
+        self.filename = filename
+        self.filepath = filepath
     
     #select the file
     def select_file(self):
@@ -25,12 +26,11 @@ class Filename:
                 filename = topic_name + "_questions.txt"
                 filepath = self.folder + filename
                 if os.path.exists(filepath):
-                    self.view_questions(filepath)
                     self.filename = filename
-                    self.filepath
+                    self.filepath = filepath
                     return filepath  
                 else:
-                    print(f"The file {self.filename} doesn't exist. Please try again.\n")
+                    print(f"The file {filename} doesn't exist. Please try again.\n")
             elif choice == "2":
                 #Ask the user what subject or topic the question will he or she be making
                 topic = input("Enter the Subject or Topic of the question: ").strip().lower()
@@ -48,7 +48,7 @@ class Filename:
                         filepath = self.folder + filename
                 self.filename = filename
                 self.filepath = filepath
-                return filepath  
+                return filepath 
             else:
                 print("Invalid choice, please enter 1 or 2 only.\n")
         
@@ -67,7 +67,7 @@ class Filename:
                     for index, choice in enumerate(data["choices"], 1):
                         print(f"  choice_{index}: {choice}")
                     print("Answer:", data["answer"])
-                    print("-" * 40)
+                    print("-" * 30)
     
     def is_question_duplicate(self, filepath, question):
         #Check if the file exists and is not empty
@@ -99,6 +99,7 @@ class QuizGenerator(Filename):
         super().__init__()
 
     def question_saver(self):
+        self.view_questions(self.filepath)
         #Ask the user to input a question
         question = input("\nEnter your question: ").strip()
         
@@ -127,9 +128,82 @@ class QuizGenerator(Filename):
             else:
                 print(f"This Question is already in the {self.filename}!\n") 
                 
-quiz_generator = QuizGenerator()
-quiz_generator.select_file()
-quiz_generator.question_saver()
-            
-#make a class for sending email
+
 #make a class for asking question
+class QuizTaker(Filename):
+    def __init__(self, score=0, quiz_log=""):
+        super().__init__()
+        self.score = score
+        self.quiz_log = quiz_log
+        
+    def load_questions(self):
+        questions = []
+        with open(self.filepath, "r", encoding="utf-8") as file:
+            for line in file:
+                line = line.strip()
+                if line:
+                    questions.append(json.loads(line))
+        return questions
+    
+    def ask_questions(self):
+        #It will then start a quiz and set the score to 0.
+        score = 0
+        quiz_log = ""
+        
+        #load the questions
+        questions = self.load_questions()        
+        
+        #the program will randomize the order of the question
+        random.shuffle(questions)
+        
+        for item, question in enumerate(questions, 1):
+            print(f"\nQ{item}: {question['question']}")
+            
+            #the program will randomize the choices
+            original_choices = question["choices"]
+            shuffle_choices = original_choices[:]      
+            random.shuffle(shuffle_choices)
+
+            labeled_choices = {
+                label: choice for label, choice in zip(["A", "B", "C", "D"], shuffle_choices)
+            }
+
+            # Display choices
+            for label, choice in labeled_choices.items():
+                print(f"    {label}. {choice}")
+                
+            answer = input("Your answer (A/B/C/D): ").strip().upper()
+            while answer not in labeled_choices:
+                answer = input("Invalid. Enter A, B, C, or D: ").strip().upper()
+                
+            correct_index = int(question["answer"].split("_")[1]) - 1
+            correct_choice = original_choices[correct_index]
+
+            user_choice = labeled_choices[answer]
+            
+            if user_choice == correct_choice:
+                print(" Correct!")
+                #Plus 1 every correct answer
+                score += 1
+            else:
+                print(f" Incorrect. Correct answer: {correct_choice}")
+                
+            quiz_log += f"Q{item}: {question['question']}\n"
+            for label, choice in labeled_choices.items():
+                is_correct = "" 
+                if choice == correct_choice:
+                    is_correct += "✅"
+                quiz_log += f"    {label}. {choice}{is_correct}\n"
+            
+            quiz_log += f"Your answer: {answer}. {user_choice}\n\n"
+        
+        self.score = score
+        self.quiz_log = quiz_log
+        return self.score, self.quiz_log
+    
+quiztaker = QuizTaker()
+quiztaker.select_file()
+quiztaker.ask_questions()
+        
+#make a class for sending email
+
