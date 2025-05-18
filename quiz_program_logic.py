@@ -10,7 +10,7 @@ from email.mime.multipart import MIMEMultipart
 class Users:
     def __init__(self, username, password, email):
         self.username = username
-        self.password = password
+        self.password = password    
         self.email = email
         
         
@@ -47,6 +47,7 @@ class Users:
                     user = json.loads(line)
                     if user["username"] == username:
                         if user["password"] == password:
+                            os.system('cls')
                             print(f"Login successful! Welcome, {username}.")
                             return Users(username, password, user["email"])
                         else:
@@ -78,7 +79,7 @@ class Filename:
                 if os.path.exists(filepath):
                     self.filename = filename
                     self.filepath = filepath
-                    return filepath  
+                    return self.filepath, self.filename  
                 else:
                     print(f"The file {filename} doesn't exist. Please try again.\n")
             elif choice == "2":
@@ -98,13 +99,25 @@ class Filename:
                         filepath = self.folder + filename
                 self.filename = filename
                 self.filepath = filepath
-                return filepath 
+                return self.filepath, self.filename 
             else:
                 print("Invalid choice, please enter 1 or 2 only.\n")
-        
+                
+    def test_select_file(self):
+        self.list_quiz_files()
+        topic_name = input("Enter the filename to open (e.g., math): ").strip()
+        filename = topic_name + "_questions.txt"
+        filepath = self.folder + filename
+        if os.path.exists(filepath):
+            self.filename = filename
+            self.filepath = filepath
+            return self.filepath, self.filename  
+        else:
+            print(f"The file {filename} doesn't exist. Please try again.\n")
+            
     #view the questions
-    def view_questions(self, filepath):
-        with open(filepath, "r", encoding="utf-8") as file:
+    def view_questions(self):
+        with open(self.filepath, "r", encoding="utf-8") as file:
             print(f"These are the questions inside {self.filename}")
 
             for line_number, line in enumerate(file, 1): 
@@ -216,6 +229,12 @@ class QuizTaker(Filename):
         self.score = score
         self.quiz_log = quiz_log
         self.total = total
+        self.current_filepath = ""
+    
+    #store the selected filepath
+    def select_file(self):
+        self.current_filepath = super().select_file()  
+        return self.current_filepath
         
     def load_questions(self):
         questions = []
@@ -289,9 +308,12 @@ class QuizTaker(Filename):
 class SendEmail(Users, QuizTaker, QuizGenerator):
     def __init__(self, username, password, email, score=0, quiz_log="", total=0, filename="", filepath=""):
         Users.__init__(self, username, password, email)
-        QuizTaker.__init__(self, score, total)
+        QuizTaker.__init__(self, score, quiz_log, total)
         self.filename = filename
         self.filepath = filepath
+        self.quiz_log = quiz_log
+        self.score = score
+        self.total = total
         
         
     def send_result(self):
@@ -318,6 +340,7 @@ class SendEmail(Users, QuizTaker, QuizGenerator):
             with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
                 server.login(sender_email, app_password)
                 server.sendmail(sender_email, self.email, msg.as_string())
+            os.system('cls')
             print("Email sent successfully!")
         except Exception as error:
             print(f"Failed to send email: {error}")
@@ -345,6 +368,7 @@ class SendEmail(Users, QuizTaker, QuizGenerator):
             with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
                 server.login(sender_email, app_password)
                 server.sendmail(sender_email, self.email, msg.as_string())
+            os.system('cls')
             print("Email sent successfully!")
         except Exception as error:
             print(f"Failed to send email: {error}")
