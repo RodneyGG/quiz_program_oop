@@ -15,7 +15,7 @@ class Users:
         
         
     #register the info to the text file
-    def register(self, filename='user/users.txt'):
+    def register(self, filename='users/users.txt'):
         user_info = {
             "username": self.username,
             "password": self.password,
@@ -43,7 +43,7 @@ class Users:
             if user["username"] == username:
                 if user["password"] == password:
                     print(f"Login successful! Welcome, {username}.")
-                    return True
+                    return Users(username, password, user["email"])
                 else:
                     print("Incorrect password.")
                     return False
@@ -273,15 +273,19 @@ class QuizTaker(Filename):
         
         self.score = score
         self.quiz_log = quiz_log
-        total = len(question) 
+        total = len(questions) 
         self.total = total
         return self.score, self.quiz_log, self.total
     
         
 #make a class for sending email
-class SendEmail(Users,Filename, QuizTaker):
-    def __init__(self):
-        super().__init__()
+class SendEmail(Users, QuizTaker):
+    def __init__(self, username, password, email, score=0, quiz_log="", total=0, filename="", filepath=""):
+        Users.__init__(self, username, password, email)
+        QuizTaker.__init__(self, score, total)
+        self.filename = filename
+        self.filepath = filepath
+        
         
     def send_result(self):
         topic = self.filename.replace("_questions.txt", "")
@@ -306,7 +310,7 @@ class SendEmail(Users,Filename, QuizTaker):
         try:
             with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
                 server.login(sender_email, app_password)
-                server.sendmail(sender_email, email, msg.as_string())
+                server.sendmail(sender_email, self.email, msg.as_string())
             print("Email sent successfully!")
         except Exception as error:
             print(f"Failed to send email: {error}")
@@ -333,7 +337,7 @@ class SendEmail(Users,Filename, QuizTaker):
         try:
             with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
                 server.login(sender_email, app_password)
-                server.sendmail(sender_email, email, msg.as_string())
+                server.sendmail(sender_email, self.email, msg.as_string())
             print("Email sent successfully!")
         except Exception as error:
             print(f"Failed to send email: {error}")
