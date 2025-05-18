@@ -72,16 +72,7 @@ class Filename:
         while True:
             choice = input("Do you want to:\n1. Open an existing file\n2. Create a new file\nEnter 1 or 2: ").strip()
             if choice == "1":
-                self.list_quiz_files()
-                topic_name = input("Enter the filename to open (e.g., math): ").strip()
-                filename = topic_name + "_questions.txt"
-                filepath = self.folder + filename
-                if os.path.exists(filepath):
-                    self.filename = filename
-                    self.filepath = filepath
-                    return self.filepath, self.filename  
-                else:
-                    print(f"The file {filename} doesn't exist. Please try again.\n")
+                self.test_select_file()
             elif choice == "2":
                 #Ask the user what subject or topic the question will he or she be making
                 topic = input("Enter the Subject or Topic of the question: ").strip().lower()
@@ -297,10 +288,10 @@ class QuizTaker(Filename):
             
             quiz_log += f"Your answer: {answer}. {user_choice}\n\n"
         
-        self.score = score
-        self.quiz_log = quiz_log
-        total = len(questions) 
-        self.total = total
+            self.score = score
+            self.quiz_log = quiz_log
+            total = len(questions) 
+            self.total = total
         return self.score, self.quiz_log, self.total
     
         
@@ -341,6 +332,7 @@ class SendEmail(Users, QuizTaker, QuizGenerator):
                 server.login(sender_email, app_password)
                 server.sendmail(sender_email, self.email, msg.as_string())
             os.system('cls')
+            print(quiz_log)
             print("Email sent successfully!")
         except Exception as error:
             print(f"Failed to send email: {error}")
