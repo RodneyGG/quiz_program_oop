@@ -34,27 +34,29 @@ class Users:
         with open(filename, "a") as file:
             file.write(json.dumps(user_info) + "\n")#Pinapahirapan ko lang sarili ko eh
             print(f"You have successfully registered\nUsername:{self.username}\
-                \nPlease don't forget your password")
+                \nPlease don't forget your password")   
         
         
 
     #validates the user        
     @staticmethod
-    def log_in(username, password, filename='user/users.txt'):
+    def log_in(username, password, filename='users/users.txt'):
         with open(filename, "r", encoding="utf-8") as file:
-            user_info = json.loads(file)
+            for line in file:
+                if line.strip():#skip empty lines
+                    user = json.loads(line)
+                    if user["username"] == username:
+                        if user["password"] == password:
+                            print(f"Login successful! Welcome, {username}.")
+                            return Users(username, password, user["email"])
+                        else:
+                            print("Incorrect password.")
+                            return False
+        print("Username not found.")
+        return False          
+                        
             
-        for user in user_info:
-            if user["username"] == username:
-                if user["password"] == password:
-                    print(f"Login successful! Welcome, {username}.")
-                    return Users(username, password, user["email"])
-                else:
-                    print("Incorrect password.")
-                    return False
-            else:
-                print("Username not found.")
-                return False
+            
                 
         
 #Make a class for picking of the file
@@ -284,7 +286,7 @@ class QuizTaker(Filename):
     
         
 #make a class for sending email
-class SendEmail(Users, QuizTaker):
+class SendEmail(Users, QuizTaker, QuizGenerator):
     def __init__(self, username, password, email, score=0, quiz_log="", total=0, filename="", filepath=""):
         Users.__init__(self, username, password, email)
         QuizTaker.__init__(self, score, total)
