@@ -23,15 +23,20 @@ class Users:
         }
         
         with open(filename, "r", encoding="utf-8") as file:
-            users_data = json.loads(file)
-        
-        for user in users_data:
-            if user["username"] == self.username:
-                print(f"{self.username} already exist. Please Try Again <3")
-                return False
+            for line in file:
+                if line.strip():#skip empty lines
+                    user = json.loads(line)
+                    if user["username"] == self.username:
+                        print(f"{self.username} already exist. Please Try Again <3")
+                        return
+                    
         #store the information here
         with open(filename, "a") as file:
-            file.write(json.dumps(user_info) + "\n")
+            file.write(json.dumps(user_info) + "\n")#Pinapahirapan ko lang sarili ko eh
+            print(f"You have successfully registered\nUsername:{self.username}\
+                \nPlease don't forget your password")
+        
+        
 
     #validates the user        
     @staticmethod
