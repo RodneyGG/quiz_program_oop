@@ -39,7 +39,7 @@ def main():
                         quiz_taker.load_questions()
                         score, quiz_log, total = quiz_taker.ask_questions()
                         send_email = SendEmail(logged_user.username, logged_user.password, logged_user.email\
-                            , score, quiz_log, total, quiz_taker.filename, quiz_taker.filepath)
+                            ,quiz_taker.filename, quiz_taker.filepath, score, quiz_log, total)
                         send_email.send_result()#hayup na yan mali lang natawag
                     elif user_choice == "2":
                         os.system('cls')
@@ -49,10 +49,11 @@ def main():
                         
                         while quiz_generator_loop:
                             what_to_do = input("Please only Type the number\n1.View Question\
-                                \n2.Add Question\n3.Remove Question\n4.Email the questions\n5.Exit")
+                                \n2.Add Question\n3.Remove Question\n4.Email the questions\n5.Exit\n")
                             if what_to_do == "1":
                                 os.system('cls')
-                                quiz_generator.view_questions()
+                                view_question = quiz_generator.view_questions()
+                                print(view_question)
                                 
                             elif what_to_do == "2":
                                 os.system('cls')
@@ -64,7 +65,7 @@ def main():
                                 
                             elif what_to_do == "4":
                                 send_email = SendEmail(logged_user.username, logged_user.password, logged_user.email\
-                                    , score, quiz_log, total, quiz_taker.filename, quiz_taker.filepath)
+                                    , quiz_generator.filename, quiz_generator.filepath)
                                 send_email.send_quiz()
                                 
                             elif what_to_do == "5":

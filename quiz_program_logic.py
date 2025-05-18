@@ -113,7 +113,6 @@ class Filename:
         quiz = [f"These are the questions inside {self.filename}\n"]
     
         with open(self.filepath, "r", encoding="utf-8") as file:
-            print(f"These are the questions inside {self.filename}")
             
             for line_number, line in enumerate(file, 1): 
                 line = line.strip()
@@ -121,20 +120,16 @@ class Filename:
                     data = json.loads(line)
                     
                     question_text = f"Question {line_number}: {data['question']}"
-                    print(question_text)
                     quiz.append(question_text)
 
                     for index, choice in enumerate(data["choices"], 1):
                         choice_text = f"  choice_{index}: {choice}"
-                        print(choice_text)
                         quiz.append(choice_text)
 
                     answer_text = f"Answer: {data['answer']}"
-                    print(answer_text)
                     quiz.append(answer_text)
 
                     separator = "-" * 30
-                    print(separator)
                     quiz.append(separator)
     
         return "\n".join(quiz)
@@ -313,7 +308,7 @@ class QuizTaker(Filename):
         
 #make a class for sending email
 class SendEmail(Users, QuizTaker, QuizGenerator):
-    def __init__(self, username, password, email, score=0, quiz_log="", total=0, filename="", filepath=""):
+    def __init__(self, username, password, email, filename="", filepath="", score=0, quiz_log="", total=0):
         Users.__init__(self, username, password, email)
         QuizTaker.__init__(self, score, quiz_log, total)
         self.filename = filename
@@ -366,7 +361,6 @@ class SendEmail(Users, QuizTaker, QuizGenerator):
         
         body = (
             f"Hi {self.username},\n\n"
-            f"Here are the questions for the Quiz: {topic.title()}\n"
             f"{quiz}\n"
             
         )
