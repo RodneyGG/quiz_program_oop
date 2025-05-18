@@ -40,27 +40,37 @@ def main():
                         score, quiz_log, total = quiz_taker.ask_questions()
                         send_email = SendEmail(logged_user.username, logged_user.password, logged_user.email\
                             , score, quiz_log, total, quiz_taker.filename, quiz_taker.filepath)
-                        send_email.send_quiz()
+                        send_email.send_result()#hayup na yan mali lang natawag
                     elif user_choice == "2":
                         os.system('cls')
                         quiz_generator = QuizGenerator()
                         quiz_generator.select_file()
                         quiz_generator_loop = True
+                        
                         while quiz_generator_loop:
                             what_to_do = input("Please only Type the number\n1.View Question\
-                                \n2.Add Question\n3.Remove Question\n4.Exit")
+                                \n2.Add Question\n3.Remove Question\n4.Email the questions\n5.Exit")
                             if what_to_do == "1":
                                 os.system('cls')
                                 quiz_generator.view_questions()
+                                
                             elif what_to_do == "2":
                                 os.system('cls')
                                 quiz_generator.question_saver()
+                                
                             elif what_to_do == "3":
                                 os.system('cls')
                                 quiz_generator.delete_question()
+                                
                             elif what_to_do == "4":
+                                send_email = SendEmail(logged_user.username, logged_user.password, logged_user.email\
+                                    , score, quiz_log, total, quiz_taker.filename, quiz_taker.filepath)
+                                send_email.send_quiz()
+                                
+                            elif what_to_do == "5":
                                 os.system('cls')
                                 quiz_generator_loop = False
+                                
                             else:
                                 os.system('cls')
                                 print("Invalid Input Try Again")
