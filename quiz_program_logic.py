@@ -288,10 +288,10 @@ class QuizTaker(Filename):
             
             quiz_log += f"Your answer: {answer}. {user_choice}\n\n"
         
-            self.score = score
-            self.quiz_log = quiz_log
-            total = len(questions) 
-            self.total = total
+        self.score = score
+        self.quiz_log = quiz_log
+        total = len(questions) 
+        self.total = total
         return self.score, self.quiz_log, self.total
     
         
