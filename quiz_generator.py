@@ -1,4 +1,6 @@
 from filename import Filename
+import json
+import os
 
 #make a class for Questions generation
 class QuizGenerator(Filename):
@@ -36,7 +38,8 @@ class QuizGenerator(Filename):
                 with open(self.filepath, "a", encoding="utf-8") as file:
                     file.write(json.dumps(questions_format) + "\n")
             else:
-                print(f"This Question is already in the {self.filename}!\n") 
+                print(f"This Question is already in the {self.filename}!\n")
+        os.system('cls') 
                 
     def delete_question(self):
         view_question = self.view_questions()
@@ -66,3 +69,4 @@ class QuizGenerator(Filename):
             with open(self.filepath, "w", encoding='utf-8') as file:
                 for questions in updated_questions:
                     file.write(json.dumps(questions) + "\n")
+        os.system('cls')

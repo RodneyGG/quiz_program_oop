@@ -1,10 +1,5 @@
 import os 
 import json
-import random
-import time
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 #make a class for the users
 class Users:

@@ -1,6 +1,11 @@
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from users import Users
 from quiz_taker import QuizTaker
 from quiz_generator import QuizGenerator
+import time
+import os
 
 #make a class for sending email
 class SendEmail(Users, QuizTaker, QuizGenerator):
@@ -39,7 +44,6 @@ class SendEmail(Users, QuizTaker, QuizGenerator):
                 server.login(sender_email, app_password)
                 server.sendmail(sender_email, self.email, msg.as_string())
             os.system('cls')
-            print(self.quiz_log)
             print("Email sent successfully!")
         except Exception as error:
             print(f"Failed to send email: {error}")

@@ -1,5 +1,6 @@
 from filename import Filename
-
+import random
+import json
                     
 #make a class for asking question
 class QuizTaker(Filename):
@@ -21,7 +22,8 @@ class QuizTaker(Filename):
             for line in file:
                 line = line.strip()
                 if line:
-                    questions.append(json.loads(line))
+                    questions.append(json.loads(line))     
+                                    
         return questions
     
     def ask_questions(self):
@@ -30,8 +32,8 @@ class QuizTaker(Filename):
         quiz_log = ""
         
         #load the questions
-        questions = self.load_questions()  
-            
+        questions = self.load_questions()
+
         #the program will randomize the order of the question
         random.shuffle(questions)
         

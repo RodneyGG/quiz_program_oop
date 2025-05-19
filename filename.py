@@ -1,3 +1,6 @@
+import json
+import os
+
 #Make a class for picking of the file
 class Filename:
     def __init__(self, filename="", filepath=""):
@@ -10,13 +13,19 @@ class Filename:
         while True:
             choice = input("Do you want to:\n1. Open an existing file\n2. Create a new file\nEnter 1 or 2: ").strip()
             if choice == "1":
+                os.system('cls')
                 result = self.test_select_file()
+                os.system('cls')
+                topic = self.filename.replace("_questions.txt", "")
+                print(f"You are currently in {topic}")
                 if result:
                     return result
             elif choice == "2":
+                os.system('cls')
                 #Ask the user what subject or topic the question will he or she be making
                 topic = input("Enter the Subject or Topic of the question: ").strip().lower()
                 filename = f"{topic}_questions.txt"
+                os.system('cls')
                 #check if filename is already exists
                 while True:
                     try:
@@ -24,15 +33,17 @@ class Filename:
                         open(filepath, "x").close()
                         break
                     except FileExistsError:
-                        print(f"The file '{self.filename}' already exists.\n")
+                        print(f"The file {filename} already exists.\n")
                         new_filename = input("Please enter a new filename: ").strip()
                         filename = new_filename + "_questions.txt"
                         filepath = self.folder + filename
+                        os.system('cls')
                 self.filename = filename
                 self.filepath = filepath
                 return self.filepath, self.filename 
             else:
                 print("Invalid choice, please enter 1 or 2 only.\n")
+            os.system('cls')
                 
     def test_select_file(self):
         self.list_quiz_files()
@@ -48,7 +59,8 @@ class Filename:
             
     #view the questions
     def view_questions(self):
-        quiz = [f"These are the questions inside {self.filename}\n"]
+        topic = self.filename.replace("_questions.txt", "")
+        quiz = [f"These are the questions inside {topic}\n"]
     
         with open(self.filepath, "r", encoding="utf-8") as file:
             

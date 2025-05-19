@@ -19,6 +19,7 @@ def main():
             users.register()
 
         elif choice == "2":
+            os.system('cls')
             username = input("Enter username: ").strip()
             password = input("Enter password: ").strip()
             logged_user = Users.log_in(username, password)
@@ -76,7 +77,8 @@ def main():
                                 
                     elif user_choice == "3":
                         #logout para maangas
-                        logged_in = False            
+                        logged_in = False
+                        os.system('cls')            
         elif choice == "3":
             main_quiz_program = False
         else:
