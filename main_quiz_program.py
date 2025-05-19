@@ -1,9 +1,9 @@
-from quiz_program_logic import Users, Filename, QuizGenerator, QuizTaker, SendEmail
+#initialize the objects 
+from users import Users
+from quiz_generator import QuizGenerator
+from quiz_taker import QuizTaker
+from send_email import SendEmail
 import os
-
-#initialize the objects    
-filename = Filename()
-
 
 def main():
     main_quiz_program = True
@@ -82,4 +82,5 @@ def main():
         else:
             print("Invalid Input Try Again")
 
-main()
+if __name__ == "__main__":
+    main()
