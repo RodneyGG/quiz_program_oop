@@ -51,15 +51,13 @@ class Users:
                             print(f"Login successful! Welcome, {username}.")
                             return Users(username, password, user["email"])
                         else:
+                            os.system("cls")
                             print("Incorrect password.")
-                            return False
+                            return None
+        os.system("cls")
         print("Username not found.")
-        return False          
-                        
-            
-            
-                
-        
+        return None          
+                               
 #Make a class for picking of the file
 class Filename:
     def __init__(self, filename="", filepath=""):
@@ -166,7 +164,8 @@ class QuizGenerator(Filename):
 
     #append the question the text file
     def question_saver(self):
-        self.view_questions(self.filepath)
+        view_question = self.view_questions()
+        print(view_question)
         #Ask the user to input a question
         question = input("\nEnter your question: ").strip()
         
@@ -197,9 +196,10 @@ class QuizGenerator(Filename):
                 print(f"This Question is already in the {self.filename}!\n") 
                 
     def delete_question(self):
-        self.view_questions()
+        view_question = self.view_questions()
+        print(view_question)
         
-        question_to_delete = input("Enter the exact question text to delete: ").strip()
+        question_to_delete = input("Enter the exact question(Just The Questions :) ) text to delete:\n").strip()
         
         with open(self.filepath, "r", encoding="utf-8") as file:
             questions = []

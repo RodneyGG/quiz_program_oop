@@ -7,9 +7,8 @@ filename = Filename()
 
 def main():
     main_quiz_program = True
-    
-    while main_quiz_program:
-        os.system('cls') 
+    os.system('cls')
+    while main_quiz_program: 
         choice = input("TYPE ONLY THE NUMBER:\n1.Register\n2.Sign In\n3.Exit\n").strip()
         if choice == "1":
             os.system('cls')
@@ -20,7 +19,6 @@ def main():
             users.register()
 
         elif choice == "2":
-            os.system('cls')
             username = input("Enter username: ").strip()
             password = input("Enter password: ").strip()
             logged_user = Users.log_in(username, password)
