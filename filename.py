@@ -47,16 +47,18 @@ class Filename:
                 
     def test_select_file(self):
         self.list_quiz_files()
-        topic_name = input("Enter the filename to open (e.g., math): ").strip()
-        filename = topic_name + "_questions.txt"
-        filepath = self.folder + filename
-        if os.path.exists(filepath):
-            self.filename = filename
-            self.filepath = filepath
-            return self.filepath, self.filename  
-        else:
-            print(f"The file {filename} doesn't exist. Please try again.\n")
-            
+        while True:
+            topic_name = input("Enter the filename to open (e.g., math): ").strip()
+            filename = topic_name + "_questions.txt"
+            filepath = self.folder + filename
+            if os.path.exists(filepath):
+                self.filename = filename
+                self.filepath = filepath
+                return self.filepath, self.filename  
+            else:
+                os.system('cls')
+                print(f"The file {topic_name} doesn't exist. Please try again.\n")
+                self.list_quiz_files()
     #view the questions
     def view_questions(self):
         topic = self.filename.replace("_questions.txt", "")

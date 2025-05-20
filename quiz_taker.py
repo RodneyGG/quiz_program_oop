@@ -26,7 +26,7 @@ class QuizTaker(Filename):
                     if line:
                         questions.append(json.loads(line))
         except FileNotFoundError:
-            print("Quiz file not found.")
+            return questions
         return questions
     
     def ask_questions(self):
