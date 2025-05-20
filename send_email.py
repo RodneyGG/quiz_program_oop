@@ -47,7 +47,8 @@ class SendEmail(Users, QuizTaker, QuizGenerator):
             print("Email sent successfully!")
         except Exception as error:
             print(f"Failed to send email: {error}")
-            
+        print(f"You have scored {self.score}/{self.total} in the Quiz:{topic}")
+        
     def send_quiz(self):
         topic = self.filename.replace("_questions.txt", "")
         sender_email = "quizmakeroop@gmail.com"

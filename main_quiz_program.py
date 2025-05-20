@@ -36,10 +36,12 @@ def main():
                         os.system('cls')
                         quiz_taker.test_select_file()
                         quiz_taker.load_questions()
-                        score, quiz_log, total = quiz_taker.ask_questions()
-                        send_email = SendEmail(logged_user.username, logged_user.password, logged_user.email\
-                            ,quiz_taker.filename, quiz_taker.filepath, score, quiz_log, total)
-                        send_email.send_result()#hayup na yan mali lang natawag
+                        result = quiz_taker.ask_questions()
+                        if result is not None:
+                            score, quiz_log, total = result
+                            send_email = SendEmail(logged_user.username, logged_user.password, logged_user.email\
+                                ,quiz_taker.filename, quiz_taker.filepath, score, quiz_log, total)
+                            send_email.send_result()#hayup na yan mali lang natawag
                     elif user_choice == "2":
                         os.system('cls')
                         quiz_generator = QuizGenerator()

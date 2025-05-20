@@ -28,6 +28,7 @@ class Users:
         #store the information here
         with open(filename, "a") as file:
             file.write(json.dumps(user_info) + "\n")#Pinapahirapan ko lang sarili ko eh
+            os.system('cls')
             print(f"You have successfully registered\nUsername:{self.username}\
                 \nPlease don't forget your password")   
         

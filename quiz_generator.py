@@ -42,6 +42,7 @@ class QuizGenerator(Filename):
         os.system('cls') 
                 
     def delete_question(self):
+        os.system('cls')
         view_question = self.view_questions()
         print(view_question)
         
@@ -64,9 +65,10 @@ class QuizGenerator(Filename):
                 updated_questions.append(question)
             
             if not found:
+                os.system('cls')
                 print(f"The Question was not found in the {self.filename}")
             #goodnight
             with open(self.filepath, "w", encoding='utf-8') as file:
                 for questions in updated_questions:
                     file.write(json.dumps(questions) + "\n")
-        os.system('cls')
+        
